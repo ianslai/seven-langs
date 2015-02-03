@@ -18,8 +18,12 @@ WordTrail contains := method(crumb,
   self trail contains(crumb)
 )
 
-WordTrail print := method(
-  self trail print
+WordTrail asString := method(
+  "Trail: " with(self trail map(coord,
+      "(" with(coord at(0) asString, ", ",
+               coord at(1) asString, ")")
+    ) join(" -> ")
+  )
 )
 
 BoggleBoard := Object clone
@@ -80,6 +84,16 @@ BoggleBoard findHelper := method(x, y, word, trail,
   ) select (trail, trail isNil not)
 )
 
+BoggleBoard asString := method(
+  lines := list()
+  for (x, 0, self size - 1,
+    lines append(self board exSlice(x * size, x * size + size))
+  )
+  lines join("\n")
+)
+
 myBoard := BoggleBoard clone
 myBoard setText(boggleText)
+
+myBoard println
 myBoard find("BOGGLE") println
