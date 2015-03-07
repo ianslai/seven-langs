@@ -17,6 +17,9 @@ sort_(List, [Min|SortedTail]) :- min(List, [], [Min|MinTail]), sort_(MinTail, So
 concat([], List, List).
 concat([Head|Tail1], List, [Head|Tail2]) :- concat(Tail1, List, Tail2).
 
+partition(Pivot, List, Lower, Higher) :-
+    partition(Pivot, List, [], Lower, [], Higher).
+
 partition(_, [], Lower, Lower, Higher, Higher).
 
 partition(Pivot, [Head|Tail], LowerAcc, Lower, HigherAcc, Higher) :-
@@ -30,7 +33,7 @@ partition(Pivot, [Head|Tail], LowerAcc, Lower, HigherAcc, Higher) :-
 qsort([], []).
 qsort([Head|Tail], Sorted) :-
     Pivot = Head,
-    partition(Pivot, Tail, [], Lower, [], Higher),
+    partition(Pivot, Tail, Lower, Higher),
     qsort(Lower, SortedLower),
     qsort(Higher, SortedHigher),
     concat(SortedLower, [Pivot|SortedHigher], Sorted).
