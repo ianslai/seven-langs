@@ -10,3 +10,27 @@ min([Head|Tail], [], Min) :- min(Tail, [Head], Min).
 % and keeping it at the front, while recursing on the rest of the list.
 sort_([], []).
 sort_(List, [Min|SortedTail]) :- min(List, [], [Min|MinTail]), sort_(MinTail, SortedTail).
+
+
+% Alternate sort inspired by QuickSort.
+
+concat([], List, List).
+concat([Head|Tail1], List, [Head|Tail2]) :- concat(Tail1, List, Tail2).
+
+partition(_, [], Lower, Lower, Higher, Higher).
+
+partition(Pivot, [Head|Tail], LowerAcc, Lower, HigherAcc, Higher) :-
+    Head < Pivot,
+    partition(Pivot, Tail, [Head|LowerAcc], Lower, HigherAcc, Higher).
+
+partition(Pivot, [Head|Tail], LowerAcc, Lower, HigherAcc, Higher) :-
+    Head >= Pivot,
+    partition(Pivot, Tail, LowerAcc, Lower, [Head|HigherAcc], Higher).
+
+qsort([], []).
+qsort([Head|Tail], Sorted) :-
+    Pivot = Head,
+    partition(Pivot, Tail, [], Lower, [], Higher),
+    qsort(Lower, SortedLower),
+    qsort(Higher, SortedHigher),
+    concat(SortedLower, [Pivot|SortedHigher], Sorted).
