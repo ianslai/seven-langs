@@ -1,5 +1,5 @@
 
-object TicTacToeMarkers {
+object TicTacToe {
     val noWinner = " "
     val ex = "X"
     val oh = "O"
@@ -7,9 +7,10 @@ object TicTacToeMarkers {
     val validMarkers = Set(noWinner, ex, oh)
 }
 
-class TicTacToeBoard(board: List[String]) {
+import TicTacToe._
+
+class TicTacToe(board: List[String]) {
     val size = 3
-    val noWinner = " "
 
     def this(boardStr: String) {
         this(boardStr.split("").toList)
@@ -17,8 +18,8 @@ class TicTacToeBoard(board: List[String]) {
         if (board.length != expectedLength) {
             throw new IllegalArgumentException("Board must be of length " + expectedLength)
         }
-        if (board.toSet != TicTacToeMarkers.validMarkers) {
-            throw new IllegalArgumentException("Board must have only valid markers " + TicTacToeMarkers.validMarkers)
+        if (board.toSet != TicTacToe.validMarkers) {
+            throw new IllegalArgumentException("Board must have only valid markers " + validMarkers)
         }
     }
 
@@ -27,7 +28,7 @@ class TicTacToeBoard(board: List[String]) {
         val cols = (0 until size).map(c => col(c))
         val slices = rows ++ cols ++ Seq(diag1(), diag2())
         val sliceWinners = slices.map(slice => sliceWinner(slice))
-        val uniqueWinners = sliceWinners.toSet.diff(Set(" "))
+        val uniqueWinners = sliceWinners.toSet.diff(Set(noWinner))
 
         return if (uniqueWinners.size == 1) uniqueWinners.head else noWinner
     }
@@ -45,3 +46,5 @@ class TicTacToeBoard(board: List[String]) {
         return if (set.size == 1) set.head else noWinner
     }
 }
+
+println(new TicTacToe("XXX   O O").winner())
