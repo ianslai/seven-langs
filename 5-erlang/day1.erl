@@ -1,5 +1,6 @@
 -module(day1).
 -export([count_words/1]).
+-export([count_words2/1]).
 -export([count_to/1]).
 -export([match_success/1]).
 
@@ -28,6 +29,20 @@ count_word_chars([Head|Tail], Count) ->
     IsWordChar -> count_word_chars(Tail, Count);
     true -> count_non_word_chars(Tail, Count)
   end.
+
+% ------------------------------------------------------------------------
+
+count_words2(String) -> count_words2(String, 0, false).
+
+count_words2("", Count, _) -> Count;
+count_words2([Head|Tail], Count, LastCharIsWord) ->
+  HeadIsWordChar = is_word_char(Head),
+  StartNewWord = (not LastCharIsWord) and HeadIsWordChar,
+  NewCount = case StartNewWord of
+    true -> Count + 1;
+    false -> Count
+  end,
+  count_words2(Tail, NewCount, HeadIsWordChar).  
 
 % ------------------------------------------------------------------------
 
