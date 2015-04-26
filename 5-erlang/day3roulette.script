@@ -1,0 +1,22 @@
+c(day3roulette).
+
+day3roulette:run().
+
+revolver ! 1.
+revolver ! 2.
+revolver ! 3.
+revolver ! 4.
+
+doctor ! die.
+
+revolver ! 1.
+revolver ! 2.
+revolver ! 3.
+revolver ! 4.
+
+doctor ! die.
+
+revolver ! 1.
+revolver ! 2.
+revolver ! 3.
+revolver ! 4.
