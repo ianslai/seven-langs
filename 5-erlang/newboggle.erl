@@ -85,6 +85,8 @@ search(String) ->
     board ! {self(), String},
     receive
         {found, Path, _} -> {found, Path}
+    after 5000 ->
+        {timeout}
 end.
 
 sample_board() -> "ABCDABAZAOGGAAEL".
