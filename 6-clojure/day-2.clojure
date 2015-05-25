@@ -1,0 +1,24 @@
+(defmacro unless [test body else]
+    (list 'if (list 'not test) body else)
+)
+
+(defprotocol Animal
+    (talk [c])
+    (whoami [c])
+)
+
+(defrecord Duck [] Animal
+    (talk [_] :quack)
+    (whoami [_] :duck)
+)
+
+(defrecord Pig [] Animal
+    (talk [_] :oink)
+    (whoami [_] :pig)
+)
+
+(talk (Duck.))
+(whoami (Duck.))
+
+(whoami (Pig.))
+(talk (Pig.))
