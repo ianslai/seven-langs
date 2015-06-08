@@ -1,0 +1,79 @@
+(require '[clojure.string :as str])
+(require '[clojure.set :as sets])
+
+
+(def boardSize 4)
+
+(defn listify [string]
+  (str/split string #"")
+)
+
+(def board
+  (listify "ABCDABAZAOGGAAEL")
+)
+
+(defn letterAt [board [x y]]
+  (nth board (+ x (* y boardSize)))
+)
+
+(defn validCoord? [[x y]]
+  (and (>= x 0)
+    (>= y 0)
+    (< x boardSize)
+    (< y boardSize)
+  )
+)
+
+(defn adjacent [[x y]]
+  [
+    [(- x 1), y],
+    [(+ x 1), y],
+    [x, (- y 1)],
+    [x, (+ y 1)]
+  ]
+)
+
+(defn neighbors [[x y]]
+  (filter validCoord? (adjacent [x y]))
+)
+
+(defn starts [boardSize]
+  (for [x (range 0 boardSize), y (range 0 boardSize)] [x y])
+)
+
+; Flatten results and remove any empties
+(defn processResults [l]
+  (remove empty? (apply concat l))
+)
+
+(defn findSubstring [board word path]
+  (let [head (first path),
+      firstLetter (letterAt board head)
+    ]
+    (cond
+      (not= firstLetter (first word)) (list)
+      (== 1 (count word)) (list path)
+      :else
+        (let [restWord (rest word),
+            myNeighbors (neighbors head),
+            unusedNeighbors (sets/difference (set myNeighbors) (set path))
+          ]
+          (processResults
+            (map
+              (fn [n] (findSubstring board restWord (cons n path)))
+              unusedNeighbors
+            )
+          )
+        )
+    )
+  )
+)
+
+(defn findInBoard [board word]
+  (take 1 (processResults
+    (map (fn [n] (findSubstring board (listify word) (list n)))
+    (starts boardSize)))
+  )
+)
+
+(findInBoard board "BOGGLE")
