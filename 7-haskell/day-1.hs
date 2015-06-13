@@ -38,6 +38,7 @@ module Main where
 
     type Color = [Char]
     type Location = [Char]
+    type Coloring = [(Location, Color)]
 
     diff :: Eq t => [t] -> [t] -> [t]
     diff a b = [x | x <- a, notElem x b]
@@ -45,18 +46,18 @@ module Main where
     findNeighbors :: Location -> [(Location, Location)] -> [Location]
     findNeighbors loc constraints = [y | (x, y) <- constraints, x == loc]
 
-    findUsableColors :: [Color] -> [(Location, Color)] -> [Color]
+    findUsableColors :: [Color] -> Coloring -> [Color]
     findUsableColors colors usedMappings = diff colors usedColors
         where usedColors = [y | (x, y) <- usedMappings]
 
-    coloringHelper :: [Location] -> [(Location, Color)] -> [Color] -> [(Location, Location)] -> [[(Location, Color)]]
+    coloringHelper :: [Location] -> Coloring -> [Color] -> [(Location, Location)] -> [Coloring]
     coloringHelper [] result colors constraints = [result]
     coloringHelper (h:remainder) used colors constraints = process (map recurse usableColors)
         where neighbors = findNeighbors h constraints
               usedNeighbors = [(n, c) | (n, c) <- used, elem n neighbors]
               usableColors = findUsableColors colors usedNeighbors
               recurse = (\c -> coloringHelper remainder ((h, c):used) colors constraints)
-              process = (\results -> [x | [x] <- results, x /= []])
+              process = (\results -> concat results)
 
     coloring = coloringHelper states [] colors constraints
         where states = ["AL", "GA", "FL", "MS", "TN"]
