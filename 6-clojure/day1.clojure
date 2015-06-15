@@ -1,0 +1,2 @@
+(defn big [st n] (> (count st) n))
+(defn collection-type [col] (cond (vector? col) :vector (list? col) :list (map? col) :map :else :something_else))
